@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc.rs/main/npm/oxlint/configuration_v0.1.0_schema.json",
+  "plugins": ["react", "import"],
+  "env": { "browser": true },
+  "settings": { "react": { "version": "detect" } },
+  "rules": {}
+}
