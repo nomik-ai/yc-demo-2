@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
@@ -105,20 +106,33 @@ export default function StudentGrades() {
                 }
                 className="card-header"
               >
-                {g.assignments.map((a) => (
-                  <div key={a.assignmentId} className="grade-row">
-                    <span>{a.title}</span>
-                    {a.score != null ? (
-                      <span className="grade-score" style={{ color: gradeColor(a.score) }}>
-                        {a.score}/100
-                      </span>
-                    ) : a.submittedAt ? (
-                      <span style={{ color: 'var(--color-gray-400)', fontSize: 'var(--text-sm)' }}>Pending</span>
-                    ) : (
-                      <span style={{ color: 'var(--color-gray-400)', fontSize: 'var(--text-sm)' }}>Not submitted</span>
-                    )}
-                  </div>
-                ))}
+                {g.assignments.map((a) => {
+                  const due = new Date(a.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                  const submitted = a.submittedAt ? new Date(a.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : null;
+                  const graded = a.gradedAt ? new Date(a.gradedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : null;
+                  return (
+                    <div key={a.assignmentId} className="grade-item">
+                      <div className="grade-item-row-1">
+                        <span className="grade-item-title">{a.title}</span>
+                        {a.score != null ? (
+                          <span className="grade-item-badge" style={{ background: gradeColor(a.score) + '20', color: gradeColor(a.score) }}>
+                            {a.score}/100
+                          </span>
+                        ) : a.submittedAt ? (
+                          <span className="grade-item-badge" style={{ background: 'var(--color-warning-light)', color: 'var(--color-warning)' }}>Pending</span>
+                        ) : (
+                          <span className="grade-item-badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-500)' }}>Not submitted</span>
+                        )}
+                      </div>
+                      <div className="grade-item-row-2">
+                        <span className="grade-item-meta">📅 Due: {due}</span>
+                        {submitted && <span className="grade-item-meta">📤 Submitted: {submitted}</span>}
+                        {graded && <span className="grade-item-meta">✅ Graded: {graded}</span>}
+                        {a.comment && <span className="grade-item-comment">💬 {a.comment}</span>}
+                      </div>
+                    </div>
+                  );
+                })}
               </Card>
             ))
           )}
